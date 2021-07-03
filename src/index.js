@@ -37,7 +37,7 @@ function checksTodoExists(request, response, next) {
 
   const user = users.find(user => user.username === username);
   const idValidate = validate(id);
-  const todo = users.find(user => user.todos.id === id);
+  const todo = user.todos.find(todo => todo.id === id);
 
   if (user && idValidate && todo) {
     request.user = user;
@@ -45,7 +45,7 @@ function checksTodoExists(request, response, next) {
 
     return next();
   }
-
+  
   if (!idValidate) {
     return response.status(400).json({ error: 'Id todo invalid '});
   }
