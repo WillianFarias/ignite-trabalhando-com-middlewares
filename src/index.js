@@ -38,10 +38,21 @@ function checksTodoExists(request, response, next) {
   const user = users.find(user => user.username === username);
   const idValid = validate(id);
 
-  if (user && idValid) {
+  if (!idValid) {
+    return response.status(400).json({ error: 'Id not found!' });
+  }
+
+  if (user) {
     const todo = user.todos.find(todo => todo.id === id);
+
+    if (!todo) {
+      return response.status(404).json({ error: 'Id not found!' });
+    }
+
     request.user = user;
     request.todo = todo;
+  } else {
+    return response.status(404).json({ error: 'User not found!' });
   }
 
   return next();
@@ -52,7 +63,7 @@ function findUserById(request, response, next) {
 
   const user = users.find(user => user.id === id);
   if (!user) {
-    return response.status(404).json({ error: 'User not found'});
+    return response.status(404).json({ error: 'User not found' });
   }
 
   request.user = user;
